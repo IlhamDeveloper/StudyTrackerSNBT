@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .progress-bar {
+            height: 6px;
+            transition: width 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .topic-item:hover {
+            background-color: #f3f4f6;
+        }
+        [type="checkbox"]:checked + span {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+        .print-only {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-only {
+                display: block;
+            }
+            body {
+                padding: 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8 no-print">
+            <h1 class="text-3xl font-bold text-indigo-700">Study Tracker</h1>
+            <div class="flex space-x-4">
+                <button onclick="window.print()" class="bg-white text-indigo-600 px-4 py-2 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition">
+                    <i class="fas fa-print mr-2"></i>Print
+                </button>
+                <button onclick="resetProgress()" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+                    <i class="fas fa-redo mr-2"></i>Reset
+                </button>
+            </div>
+        </div>
+
+        <div class="print-only mb-6">
+            <h1 class="text-2xl font-bold text-center text-indigo-700">Study Progress Report</h1>
+            <p class="text-center text-gray-500">Generated on: <span id="print-date"></span></p>
+        </div>
+
+        <!-- Progress Summary -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Overall Progress</h2>
+            <div class="mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-700">Total Completion</span>
+                    <span class="font-medium" id="overall-percentage">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="overall-progress" class="progress-bar bg-indigo-600 rounded-full h-2.5" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-indigo-700">PU</span>
+                        <span class="font-medium text-indigo-700" id="pu-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-indigo-200 rounded-full h-2">
+                        <div id="pu-progress" class="progress-bar bg-indigo-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-blue-700">PBM</span>
+                        <span class="font-medium text-blue-700" id="pbm-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-blue-200 rounded-full h-2">
+                        <div id="pbm-progress" class="progress-bar bg-blue-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-green-700">PPU</span>
+                        <span class="font-medium text-green-700" id="ppu-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-green-200 rounded-full h-2">
+                        <div id="ppu-progress" class="progress-bar bg-green-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-purple-700">LBI</span>
+                        <span class="font-medium text-purple-700" id="lbi-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-purple-200 rounded-full h-2">
+                        <div id="lbi-progress" class="progress-bar bg-purple-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-yellow-700">LBE</span>
+                        <span class="font-medium text-yellow-700" id="lbe-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-yellow-200 rounded-full h-2">
+                        <div id="lbe-progress" class="progress-bar bg-yellow-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-red-700">PK & PM</span>
+                        <span class="font-medium text-red-700" id="pkpm-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-red-200 rounded-full h-2">
+                        <div id="pkpm-progress" class="progress-bar bg-red-600 rounded-full h-2" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- PU -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-indigo-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">PU (Penalaran Umum)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-indigo-100">13 topics</span>
+                        <span class="font-medium text-white" id="pu-count">0/13</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-1" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-1" class="ml-3 text-gray-700">1. Kesesuaian Pernyataan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-2" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-2" class="ml-3 text-gray-700">2. Sebab Akibat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-3" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-3" class="ml-3 text-gray-700">3. Prediksi data/simpulan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-4" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-4" class="ml-3 text-gray-700">4. Simpulan Logis</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-5" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-5" class="ml-3 text-gray-700">5. Penalaran Analitik</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-6" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-6" class="ml-3 text-gray-700">6. Kualitas Simpulan dan opini atau fakta teks</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-7" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-7" class="ml-3 text-gray-700">7. Pola dan Operasi Bilangan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-8" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-8" class="ml-3 text-gray-700">8. Barisan Bilangan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-9" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-9" class="ml-3 text-gray-700">9. Barisan Aritmatika</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-10" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-10" class="ml-3 text-gray-700">10. Silogisme</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-11" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-11" class="ml-3 text-gray-700">11. Logika Ekuator</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-12" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-12" class="ml-3 text-gray-700">12. Tabel</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pu-13" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
+                            <label for="pu-13" class="ml-3 text-gray-700">13. Grafis</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PBM -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-blue-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">PBM (Pengetahuan Bahasa dan Menulis)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-blue-100">18 topics</span>
+                        <span class="font-medium text-white" id="pbm-count">0/18</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-1" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-1" class="ml-3 text-gray-700">1. Frasa</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-2" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-2" class="ml-3 text-gray-700">2. Pola Kalimat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-3" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-3" class="ml-3 text-gray-700">3. Penentuan Judul & simpulan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-4" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-4" class="ml-3 text-gray-700">4. Kalimat efektif</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-5" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-5" class="ml-3 text-gray-700">5. Kata baku & tidak baku</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-6" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-6" class="ml-3 text-gray-700">6. Tanda titik, koma dan titik koma</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-7" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-7" class="ml-3 text-gray-700">7. Titik dua,petik dan Pisah</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-8" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-8" class="ml-3 text-gray-700">8. Huruf Kapital dan nonkapital</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-9" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-9" class="ml-3 text-gray-700">9. Penggunaan Huruf miring</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-10" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-10" class="ml-3 text-gray-700">10. Penulisan angka & Bilangan (Rupiah Nominal)</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-11" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-11" class="ml-3 text-gray-700">11. Penulisan Nama latin dalam judul</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-12" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-12" class="ml-3 text-gray-700">12. Kaidah peleburan KTSP</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-13" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-13" class="ml-3 text-gray-700">13. Akronim & Singkatan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-14" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-14" class="ml-3 text-gray-700">14. Kata Ulang,pemerinci, & berpasangan tetap</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-15" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-15" class="ml-3 text-gray-700">15. Gabungan Kata</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-16" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-16" class="ml-3 text-gray-700">16. Preposisi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-17" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-17" class="ml-3 text-gray-700">17. Makna Konjungsi Antarkalimat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pbm-18" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
+                            <label for="pbm-18" class="ml-3 text-gray-700">18. Imbuhan Per-ber atau be</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPU -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-green-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">PPU (Pemahaman Pengetahuan Umum)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-green-100">13 topics</span>
+                        <span class="font-medium text-white" id="ppu-count">0/13</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-1" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-1" class="ml-3 text-gray-700">1. Ide pokok</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-2" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-2" class="ml-3 text-gray-700">2. Kesimpulan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-3" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-3" class="ml-3 text-gray-700">3. Jenis Jenis Paragraf</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-4" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-4" class="ml-3 text-gray-700">4. Sikap dan tujuan penulis</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-5" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-5" class="ml-3 text-gray-700">5. Hubungan antar Paragraf</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-6" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-6" class="ml-3 text-gray-700">6. Analisis Bacaan & Kepaduan Paragraf</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-7" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-7" class="ml-3 text-gray-700">7. Hubungan Antar Kalimat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-8" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-8" class="ml-3 text-gray-700">8. Makna Kata</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-9" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-9" class="ml-3 text-gray-700">9. Sifat Kata</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-10" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-10" class="ml-3 text-gray-700">10. Sinonim</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-11" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-11" class="ml-3 text-gray-700">11. Antonim</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-12" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-12" class="ml-3 text-gray-700">12. Kalimat efektif</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="ppu-13" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
+                            <label for="ppu-13" class="ml-3 text-gray-700">13. Bahasa Panda</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LBI -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-purple-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">LBI (Literasi Bahasa Indonesia)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-purple-100">7 topics</span>
+                        <span class="font-medium text-white" id="lbi-count">0/7</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-1" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-1" class="ml-3 text-gray-700">1. Menentukan Tema</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-2" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-2" class="ml-3 text-gray-700">2. Simpulan Bacaan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-3" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-3" class="ml-3 text-gray-700">3. Kepaduan Paragraf</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-4" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-4" class="ml-3 text-gray-700">4. Fakta/data yang relevan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-5" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-5" class="ml-3 text-gray-700">5. Ketepatan Opini</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-6" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-6" class="ml-3 text-gray-700">6. Evaluasi Sebab- Akibat paragraf</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbi-7" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
+                            <label for="lbi-7" class="ml-3 text-gray-700">7. Bena Atau salah</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LBE -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-yellow-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">LBE (Literasi Bahasa Inggris)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-yellow-100">20 topics</span>
+                        <span class="font-medium text-white" id="lbe-count">0/20</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-1" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-1" class="ml-3 text-gray-700">1. Theme/Topic</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-2" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-2" class="ml-3 text-gray-700">2. Core Sentence</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-3" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-3" class="ml-3 text-gray-700">3. Supporting Ideas</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-4" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-4" class="ml-3 text-gray-700">4. Finding Specific Information</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-5" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-5" class="ml-3 text-gray-700">5. Restating Sentence</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-6" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-6" class="ml-3 text-gray-700">6. Understand Vocabulary Cloze</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-7" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-7" class="ml-3 text-gray-700">7. Text Comparison</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-8" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-8" class="ml-3 text-gray-700">8. Author's Opinion & Attitude</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-9" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-9" class="ml-3 text-gray-700">9. Author's Writing Oragnisation &Coherence</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-10" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-10" class="ml-3 text-gray-700">10. Inference & reference</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-11" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-11" class="ml-3 text-gray-700">11. Lost Word</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-12" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-12" class="ml-3 text-gray-700">12. Conjuction & preposition</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-13" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-13" class="ml-3 text-gray-700">13. Noun & Pronoun</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-14" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-14" class="ml-3 text-gray-700">14. Gerund & Infinitive</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-15" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-15" class="ml-3 text-gray-700">15. Adjectives & adverbs</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-16" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-16" class="ml-3 text-gray-700">16. Comparative and superlative</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-17" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-17" class="ml-3 text-gray-700">17. Transitive and intransitive Verb</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-18" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-18" class="ml-3 text-gray-700">18. Present Tense Simple/perfect/continous</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-19" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-19" class="ml-3 text-gray-700">19. Past Tense simple/perfect/Continous</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="lbe-20" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
+                            <label for="lbe-20" class="ml-3 text-gray-700">20. Future Tense simple/perfect/continous</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PK & PM -->
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                <div class="bg-red-600 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white">PK & PM (Pengetahuan Kuantitatif & Matematika)</h2>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-red-100">50 topics</span>
+                        <span class="font-medium text-white" id="pkpm-count">0/50</span>
+                    </div>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="space-y-3">
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-1" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-1" class="ml-3 text-gray-700">1. Sifat dan Operasi Bilangan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-2" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-2" class="ml-3 text-gray-700">2. Pecahan, Desimal dan Bentuk Persen</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-3" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-3" class="ml-3 text-gray-700">3. Jenis Bilangan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-4" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-4" class="ml-3 text-gray-700">4. KPK, FPB</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-5" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-5" class="ml-3 text-gray-700">5. Sifat-Sifat Himpunan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-6" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-6" class="ml-3 text-gray-700">6. Perhitungan Himpunan/Diagram Venn</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-7" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-7" class="ml-3 text-gray-700">7. Permodelan dan Operasi Aljabar</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-8" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-8" class="ml-3 text-gray-700">8. Eksponensial dan Akar</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-9" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-9" class="ml-3 text-gray-700">9. Persamaan Logaritma</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-10" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-10" class="ml-3 text-gray-700">10. Variabel dan Konstanta</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-11" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-11" class="ml-3 text-gray-700">11. Untung, Rugi, dan Diskon</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-12" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-12" class="ml-3 text-gray-700">12. Bunga Tunggal & Majemuk</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-13" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-13" class="ml-3 text-gray-700">13. Rasio dan Proposi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-14" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-14" class="ml-3 text-gray-700">14. Perbandingan Senilai dan Bertingkat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-15" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-15" class="ml-3 text-gray-700">15. Kecepatan, Menyusul, Berpapasan, Debit</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-16" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-16" class="ml-3 text-gray-700">16. Baris & Deret Aritmatika</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-17" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-17" class="ml-3 text-gray-700">17. Baris & Deret Geometri</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-18" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-18" class="ml-3 text-gray-700">18. Sistem Persamaan Linear Satu & Dua Variabel dan Soal Cerita</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-19" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-19" class="ml-3 text-gray-700">19. Sistem Persamaan Linear Tiga Variabel dan Soal Cerita</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-20" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-20" class="ml-3 text-gray-700">20. Sistem Pertidaksamaan Linear Satu & Dua Variabel</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-21" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-21" class="ml-3 text-gray-700">21. Gradien Garis</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-22" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-22" class="ml-3 text-gray-700">22. Persamaan Garis Lurus dan Grafik</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-23" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-23" class="ml-3 text-gray-700">23. Sifat-sifat, Domain, Range Fungsi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-24" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-24" class="ml-3 text-gray-700">24. Operasi Fungsi & Fungsi Komposisi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-25" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-25" class="ml-3 text-gray-700">25. Fungsi Invers</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-26" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-26" class="ml-3 text-gray-700">26. Jenis Fungsi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-27" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-27" class="ml-3 text-gray-700">27. Fungsi Kuadrat & Sifat-sifatnya</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-28" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-28" class="ml-3 text-gray-700">28. Faktor dan Rumus ABC</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-29" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-29" class="ml-3 text-gray-700">29. Grafik Fungsi Kuadrat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-30" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-30" class="ml-3 text-gray-700">30. Titik, Garis, Sudut</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-31" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-31" class="ml-3 text-gray-700">31. Bangun Datar</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-32" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-32" class="ml-3 text-gray-700">32. Bangun Ruang</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-33" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-33" class="ml-3 text-gray-700">33. Koordinat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-34" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-34" class="ml-3 text-gray-700">34. Pythagoras</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-35" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-35" class="ml-3 text-gray-700">35. Trigonometri, Sudut Istimewa</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-36" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-36" class="ml-3 text-gray-700">36. Mean, Median, dan Modus</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-37" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-37" class="ml-3 text-gray-700">37. Kuartil, Data Tunggal & Data Kelompok</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-38" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-38" class="ml-3 text-gray-700">38. Jangkauan, Varian, Simpangan Baku, Rata-rata</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-39" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-39" class="ml-3 text-gray-700">39. Sifat-sifat & Operasi Matriks</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-40" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-40" class="ml-3 text-gray-700">40. Transpose & Determinan Matriks</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-41" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-41" class="ml-3 text-gray-700">41. Invers & Persamaan Matriks</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-42" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-42" class="ml-3 text-gray-700">42. Aturan Perkalian</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-43" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-43" class="ml-3 text-gray-700">43. Permutasi dan Kombinasi</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-44" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-44" class="ml-3 text-gray-700">44. Konsep Dasar Peluang, Peluang Satu Kejadian</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-45" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-45" class="ml-3 text-gray-700">45. Frekuensi Harapan</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-46" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-46" class="ml-3 text-gray-700">46. Kejadian Saling/Tidak Saling Lepas, Bebas</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-47" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-47" class="ml-3 text-gray-700">47. Peluang Kejadian Bersyarat</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-48" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-48" class="ml-3 text-gray-700">48. Pengertian Limit</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-49" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-49" class="ml-3 text-gray-700">49. Jenis - Jenis Limit</label>
+                        </div>
+                        <div class="topic-item flex items-center p-2 rounded-lg">
+                            <input type="checkbox" id="pkpm-50" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
+                            <label for="pkpm-50" class="ml-3 text-gray-700">50. Penyelesaian Limit</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress tracking
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            updateProgress();
+            
+            // Set print date
+            const now = new Date();
+            document.getElementById('print-date').textContent = now.toLocaleDateString('id-ID', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        });
+
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const savedState = localStorage.getItem(checkbox.id);
+                if (savedState === 'true') {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        // Update progress calculations
+        function updateProgress() {
+            // Save state to localStorage
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                localStorage.setItem(checkbox.id, checkbox.checked);
+            });
+
+            // Calculate category progress
+            const categories = ['pu', 'pbm', 'ppu', 'lbi', 'lbe', 'pkpm'];
+            const topicCounts = {
+                pu: 13,
+                pbm: 18,
+                ppu: 13,
+                lbi: 7,
+                lbe: 20,
+                pkpm: 50
+            };
+
+            let totalCompleted = 0;
+            let totalTopics = 0;
+
+            categories.forEach(category => {
+                let completed = 0;
+                for (let i = 1; i <= topicCounts[category]; i++) {
+                    const checkbox = document.getElementById(`${category}-${i}`);
+                    if (checkbox && checkbox.checked) {
+                        completed++;
+                    }
+                }
+
+                const percentage = Math.round((completed / topicCounts[category]) * 100);
+                document.getElementById(`${category}-percentage`).textContent = `${percentage}%`;
+                document.getElementById(`${category}-progress`).style.width = `${percentage}%`;
+                document.getElementById(`${category}-count`).textContent = `${completed}/${topicCounts[category]}`;
+
+                totalCompleted += completed;
+                totalTopics += topicCounts[category];
+            });
+
+            // Update overall progress
+            const overallPercentage = Math.round((totalCompleted / totalTopics) * 100);
+            document.getElementById('overall-percentage').textContent = `${overallPercentage}%`;
+            document.getElementById('overall-progress').style.width = `${overallPercentage}%`;
+        }
+
+        // Reset all progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all your progress?')) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    localStorage.removeItem(checkbox.id);
+                });
+                updateProgress();
+            }
+        }
+    </script>
+</body>
+</html>
