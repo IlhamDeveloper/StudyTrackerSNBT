@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+
+.category-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.topic-item {
+    transition: background-color 0.2s ease;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background-color: white !important;
+    }
+    
+    .category-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    #print-date::after {
+        content: attr(data-date);
+    }
+}
