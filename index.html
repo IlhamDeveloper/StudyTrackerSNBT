@@ -8,23 +8,38 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="style.css">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#4F46E5',
+              secondary: '#10B981',
+            }
+          }
+        }
+      }
+    </script>
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-8 no-print">
-            <h1 class="text-3xl font-bold text-indigo-700">Lolos PTN bareng</h1>
+            <div class="flex items-center">
+                <i data-feather="book" class="text-primary mr-3"></i>
+                <h1 class="text-3xl font-bold text-primary">Lolos PTN bareng</h1>
+            </div>
             <div class="flex space-x-4">
-                <button onclick="window.print()" class="bg-white text-indigo-600 px-4 py-2 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition">
+                <button onclick="window.print()" class="bg-white text-primary px-4 py-2 rounded-lg border border-primary hover:bg-primary/10 transition flex items-center">
                     <i data-feather="printer" class="mr-2"></i>Print
                 </button>
-                <button onclick="resetProgress()" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+                <button onclick="resetProgress()" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition flex items-center">
                     <i data-feather="refresh-cw" class="mr-2"></i>Reset
                 </button>
             </div>
         </div>
 
         <div class="print-only mb-6">
-            <h1 class="text-2xl font-bold text-center text-indigo-700">Study Progress Report</h1>
+            <h1 class="text-2xl font-bold text-center text-primary">Study Progress Report</h1>
             <p class="text-center text-gray-500">Generated on: <span id="print-date"></span></p>
         </div>
 
@@ -34,10 +49,10 @@
             <div class="mb-4">
                 <div class="flex justify-between mb-2">
                     <span class="text-gray-700">Total Completion</span>
-                    <span class="font-medium" id="overall-percentage">0%</span>
+                    <span class="font-medium text-primary" id="overall-percentage">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div id="overall-progress" class="progress-bar bg-indigo-600 rounded-full h-2.5" style="width: 0%"></div>
+                    <div id="overall-progress" class="progress-bar bg-primary rounded-full h-2.5" style="width: 0%"></div>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -101,7 +116,7 @@
         <!-- Categories -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- PU -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-indigo-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">PU (Penalaran Umum)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -111,35 +126,35 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-1" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-1" class="ml-3 text-gray-700">1. Analisis Kesesuaian Bacaan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-2" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-2" class="ml-3 text-gray-700">2. Penalaran Logis</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-3" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-3" class="ml-3 text-gray-700">3. Memperkuat dan memperlemah argumen</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-4" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-4" class="ml-3 text-gray-700">4. Kualitas kesimpulan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-5" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-5" class="ml-3 text-gray-700">5. Simpulan yang paling didukung</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-6" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-6" class="ml-3 text-gray-700">6. Analitik kuantitatif</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-7" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-7" class="ml-3 text-gray-700">7. Interpretasi data</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-indigo-50">
                             <input type="checkbox" id="pu-8" class="form-checkbox h-5 w-5 text-indigo-600" onchange="updateProgress()">
                             <label for="pu-8" class="ml-3 text-gray-700">8. Pola Barisan</label>
                         </div>
@@ -148,7 +163,7 @@
             </div>
 
             <!-- PBM -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-blue-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">PBM (Pengetahuan Bahasa dan Menulis)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -158,35 +173,35 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-1" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-1" class="ml-3 text-gray-700">1. Inti Kalimat</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-2" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-2" class="ml-3 text-gray-700">2. Kalimat Efektif</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-3" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-3" class="ml-3 text-gray-700">3. Kalimat Sumbang</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-4" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-4" class="ml-3 text-gray-700">4. Konjungsi</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-5" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-5" class="ml-3 text-gray-700">5. Penggunaan Tanda Baca</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-6" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-6" class="ml-3 text-gray-700">6. Penulisan Huruf</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-7" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-7" class="ml-3 text-gray-700">7. Penulisan Kata</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-blue-50">
                             <input type="checkbox" id="pbm-8" class="form-checkbox h-5 w-5 text-blue-600" onchange="updateProgress()">
                             <label for="pbm-8" class="ml-3 text-gray-700">8. Pola Kalimat</label>
                         </div>
@@ -195,7 +210,7 @@
             </div>
 
             <!-- PPU -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-green-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">PPU (Pemahaman Pengetahuan Umum)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -205,31 +220,31 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-1" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-1" class="ml-3 text-gray-700">1. Ide pokok</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-2" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-2" class="ml-3 text-gray-700">2. Kata Berpasangan Tetap</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-3" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-3" class="ml-3 text-gray-700">3. Kata Konotatif dan denotatif</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-4" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-4" class="ml-3 text-gray-700">4. Makna Imbuhan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-5" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-5" class="ml-3 text-gray-700">5. Pemisahan Gagasan pada Paragraf</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-6" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-6" class="ml-3 text-gray-700">6. Penggabungan Kalimat</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-green-50">
                             <input type="checkbox" id="ppu-7" class="form-checkbox h-5 w-5 text-green-600" onchange="updateProgress()">
                             <label for="ppu-7" class="ml-3 text-gray-700">7. Relasi Makna</label>
                         </div>
@@ -238,7 +253,7 @@
             </div>
 
             <!-- LBI -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-purple-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">LBI (Literasi Bahasa Indonesia)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -248,43 +263,43 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-1" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-1" class="ml-3 text-gray-700">1. Analisis teks bacaan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-2" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-2" class="ml-3 text-gray-700">2. Gagasan Pokok</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-3" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-3" class="ml-3 text-gray-700">3. Hubungan antara kalimat</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-4" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-4" class="ml-3 text-gray-700">4. Inti kalimat</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-5" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-5" class="ml-3 text-gray-700">5. Kata Berpasangan Tetap</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-6" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-6" class="ml-3 text-gray-700">6. Paragraf acak</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-7" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-7" class="ml-3 text-gray-700">7. Paragraf Rumpang</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-8" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-8" class="ml-3 text-gray-700">8. Pemisahan gagasan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-9" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-9" class="ml-3 text-gray-700">9. Pola penyusunan kalimat</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-purple-50">
                             <input type="checkbox" id="lbi-10" class="form-checkbox h-5 w-5 text-purple-600" onchange="updateProgress()">
                             <label for="lbi-10" class="ml-3 text-gray-700">10. Tema, Topik, dan judul</label>
                         </div>
@@ -293,7 +308,7 @@
             </div>
 
             <!-- LBE -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-yellow-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">LBE (Literasi Bahasa Inggris)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -303,31 +318,31 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-1" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-1" class="ml-3 text-gray-700">1. Author Related Question</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-2" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-2" class="ml-3 text-gray-700">2. Finding Contextual meaning</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-3" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-3" class="ml-3 text-gray-700">3. Main ideas</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-4" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-4" class="ml-3 text-gray-700">4. Predicting paragraf</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-5" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-5" class="ml-3 text-gray-700">5. Reference Question</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-6" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-6" class="ml-3 text-gray-700">6. Restating Sentence</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-yellow-50">
                             <input type="checkbox" id="lbe-7" class="form-checkbox h-5 w-5 text-yellow-600" onchange="updateProgress()">
                             <label for="lbe-7" class="ml-3 text-gray-700">7. Summarizing Passage</label>
                         </div>
@@ -336,7 +351,7 @@
             </div>
 
             <!-- PK & PM -->
-            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="category-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 hover:shadow-lg">
                 <div class="bg-red-600 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white">PK & PM (Pengetahuan Kuantitatif & Matematika)</h2>
                     <div class="flex justify-between items-center mt-2">
@@ -346,79 +361,79 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-3">
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-1" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-1" class="ml-3 text-gray-700">1. Aljabar</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-2" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-2" class="ml-3 text-gray-700">2. Barisan dan deret</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-3" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-3" class="ml-3 text-gray-700">3. Dimensi Tiga</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-4" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-4" class="ml-3 text-gray-700">4. Eksponen dan Bentuk akar</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-5" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-5" class="ml-3 text-gray-700">5. Fungsi</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-6" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-6" class="ml-3 text-gray-700">6. Garis dan sudut</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-7" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-7" class="ml-3 text-gray-700">7. Logaritma</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-8" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-8" class="ml-3 text-gray-700">8. Perbandingan dasar trigonometri</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-9" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-9" class="ml-3 text-gray-700">9. Persamaan dan pertidaksamaan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-10" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-10" class="ml-3 text-gray-700">10. Aplikasi FPB & KPK</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-11" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-11" class="ml-3 text-gray-700">11. Aritmetika sosial</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-12" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-12" class="ml-3 text-gray-700">12. Bangun Ruang</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-13" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-13" class="ml-3 text-gray-700">13. Barisan dan deret</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-14" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-14" class="ml-3 text-gray-700">14. Fungsi</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-15" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-15" class="ml-3 text-gray-700">15. Peluang dan kaidah pencacahan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-16" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-16" class="ml-3 text-gray-700">16. Perbandingan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-17" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-17" class="ml-3 text-gray-700">17. Sistem Persamaan</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-18" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-18" class="ml-3 text-gray-700">18. Statistika</label>
                         </div>
-                        <div class="topic-item flex items-center p-2 rounded-lg">
+                        <div class="topic-item flex items-center p-2 rounded-lg hover:bg-red-50">
                             <input type="checkbox" id="pkpm-19" class="form-checkbox h-5 w-5 text-red-600" onchange="updateProgress()">
                             <label for="pkpm-19" class="ml-3 text-gray-700">19. Trigonometri</label>
                         </div>
